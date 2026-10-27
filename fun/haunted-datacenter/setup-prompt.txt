@@ -1,0 +1,42 @@
+Set up Haunted Datacenter locally from gogococo/haunted-datacenter release
+stream-host-v1, exact commit 0c0611cdabf64c48bd60074f24082e0f12d39781.
+Read its tagged README, serverless.py, caretaker.py, and dependency files first.
+Use this release's managed Token Factory fine-tuning and local model runner.
+
+1. Clone into a separate directory, verify the commit, and use Python 3.12
+   with an isolated virtual environment. Install platform-compatible PyTorch
+   and the release's requirements-model.txt. Download Qwen/Qwen3-0.6B at
+   c1899de289a04d12100db370d81485cdf75e47ca using hf into models/base.
+   Report dependency conflicts; do not silently change pins or game code.
+2. Check for NEBIUS_API_KEY and Tavily CLI authentication (TAVILY_API_KEY or
+   tvly login), without printing credential values. Use a private ignored
+   .env if needed and explicitly load it; this game has no dotenv loader.
+   Ask me to enter missing secrets locally, never in chat. Check the nebius
+   CLI profile is already authenticated. A Token Factory key cannot replace it.
+3. Discover/select my AI Cloud project and subnet using read-only operations.
+   Ask me to select if multiple plausible projects exist. Check available
+   quota and compatibility for one cpu-d3 / 2vcpu-8gb controller with 20 GiB
+   disk. Export NEBIUS_PROJECT_ID and NEBIUS_SUBNET_ID to the game process.
+   Reuse my project/subnet. If either is missing, explain the exact required
+   resource and request the missing selection or creation authorization.
+4. Check Token Factory account access to model listing, dedicated endpoint
+   listing/templates, Qwen/Qwen3-0.6B fine-tuning, and checkpoint retrieval.
+   Distinguish read-only checks from capabilities only a paid job can prove.
+   Prefer a compatible image-capable serverless model already available to
+   the account. If a dedicated vision endpoint is necessary, first report
+   its model, region, capacity, and billing implications and get approval.
+   Reuse a compatible enabled endpoint instead of creating a duplicate.
+5. Start the local runner on 127.0.0.1:8770 and the game on 127.0.0.1:8765.
+   Keep both on loopback and use the same private runtime directory. Record
+   process IDs and log paths without copying secrets into the summary.
+   Verify runner /health, game /healthz, and the welcome page. Run the tagged
+   automated tests in a temporary GAME_DATA_DIR. Explain any failed checks.
+6. Leave training submission and the Room 3 cooling deployment to the player.
+   Do not submit a training job, create a cooling endpoint, pre-solve rooms,
+   or load an old adapter during setup. Do not create a cloud game host,
+   warm GPU worker, text-serving endpoint, registry, or public tunnel.
+7. Return the local URL, required credential names and readiness (no values),
+   selected project/subnet and vision model, validation evidence, unresolved
+   prerequisites, and cleanup instructions. List any resources created with
+   their IDs. Explain that API calls, fine-tuning, and cloud endpoints bill
+   separately, and resets do not cancel jobs or stop endpoints in this tag.
