@@ -1,42 +1,54 @@
-Set up Haunted Datacenter locally from gogococo/haunted-datacenter release
-stream-host-v1, exact commit 0c0611cdabf64c48bd60074f24082e0f12d39781.
-Read its tagged README, serverless.py, caretaker.py, and dependency files first.
-Use this release's managed Token Factory fine-tuning and local model runner.
+Set up Haunted Datacenter with a local web app from gogococo/haunted-datacenter
+release stream-host-v2, exact commit fb7c5d2f5c405f876e31be093e4204f0b553ef52.
+Read the tagged README, deploy/TRAINING.md, deploy/training-start.sh,
+training_worker.py, training_cloud.py, caretaker.py, and serverless.py first.
+Use the recommended warm Serverless GPU path, not the legacy local CPU runner.
 
-1. Clone into a separate directory, verify the commit, and use Python 3.12
-   with an isolated virtual environment. Install platform-compatible PyTorch
-   and the release's requirements-model.txt. Download Qwen/Qwen3-0.6B at
-   c1899de289a04d12100db370d81485cdf75e47ca using hf into models/base.
-   Report dependency conflicts; do not silently change pins or game code.
-2. Check for NEBIUS_API_KEY and Tavily CLI authentication (TAVILY_API_KEY or
-   tvly login), without printing credential values. Use a private ignored
-   .env if needed and explicitly load it; this game has no dotenv loader.
-   Ask me to enter missing secrets locally, never in chat. Check the nebius
-   CLI profile is already authenticated. A Token Factory key cannot replace it.
-3. Discover/select my AI Cloud project and subnet using read-only operations.
-   Ask me to select if multiple plausible projects exist. Check available
-   quota and compatibility for one cpu-d3 / 2vcpu-8gb controller with 20 GiB
-   disk. Export NEBIUS_PROJECT_ID and NEBIUS_SUBNET_ID to the game process.
-   Reuse my project/subnet. If either is missing, explain the exact required
-   resource and request the missing selection or creation authorization.
-4. Check Token Factory account access to model listing, dedicated endpoint
-   listing/templates, Qwen/Qwen3-0.6B fine-tuning, and checkpoint retrieval.
-   Distinguish read-only checks from capabilities only a paid job can prove.
-   Prefer a compatible image-capable serverless model already available to
-   the account. If a dedicated vision endpoint is necessary, first report
-   its model, region, capacity, and billing implications and get approval.
-   Reuse a compatible enabled endpoint instead of creating a duplicate.
-5. Start the local runner on 127.0.0.1:8770 and the game on 127.0.0.1:8765.
-   Keep both on loopback and use the same private runtime directory. Record
-   process IDs and log paths without copying secrets into the summary.
-   Verify runner /health, game /healthz, and the welcome page. Run the tagged
-   automated tests in a temporary GAME_DATA_DIR. Explain any failed checks.
-6. Leave training submission and the Room 3 cooling deployment to the player.
-   Do not submit a training job, create a cooling endpoint, pre-solve rooms,
-   or load an old adapter during setup. Do not create a cloud game host,
-   warm GPU worker, text-serving endpoint, registry, or public tunnel.
-7. Return the local URL, required credential names and readiness (no values),
-   selected project/subnet and vision model, validation evidence, unresolved
-   prerequisites, and cleanup instructions. List any resources created with
-   their IDs. Explain that API calls, fine-tuning, and cloud endpoints bill
-   separately, and resets do not cancel jobs or stop endpoints in this tag.
+1. Clone into a separate directory, verify the commit, create a Python 3.12
+   virtual environment, and install tavily-cli==0.1.8. The local web server
+   does not need torch, requirements-model.txt, or a local model download.
+2. Check NEBIUS_API_KEY and Tavily CLI authentication (TAVILY_API_KEY or
+   tvly login) without printing secret values. Have me enter missing secrets
+   locally, never in chat. Use an ignored .env with restrictive permissions
+   and load it explicitly; this game has no dotenv loader. Check my nebius
+   CLI profile is authenticated separately from the Token Factory key.
+3. Discover my project, subnet, and compatible persistent filesystem using
+   read-only operations. Reuse existing resources; ask me to select when
+   ambiguous. Check regional availability, endpoint/storage permissions,
+   and GPU/CPU/disk/filesystem quotas. Export NEBIUS_PROJECT_ID and
+   NEBIUS_SUBNET_ID. Use TRAINING_FILESYSTEM_ID for worker provisioning.
+4. Check Token Factory model, dedicated endpoint, and template listing.
+   Verify access to a compatible vision model and the personality dialogue
+   model Qwen/Qwen3-30B-A3B-Instruct-2507. Explain billed inference checks
+   before running them. Prefer an available serverless vision model or
+   compatible existing dedicated endpoint. Managed Token Factory fine-tuning
+   and checkpoint downloads are not required for the warm-worker path.
+5. Reuse a compatible ready worker if supplied. Otherwise prepare a concrete
+   GPU/filesystem plan from deploy/TRAINING.md: one gpu-l40s-a worker,
+   1gpu-8vcpu-32gb, 200Gi container disk, 2Gi shared memory, persistent
+   /mnt/persist mount, pinned image/startup script/model, port 8000/http,
+   and private token authentication. Use the tagged default pool sizes.
+   Report capacity, region, storage sizing, billing implications, and exact
+   resources to create. Get approval for new paid infrastructure, including
+   any necessary dedicated vision endpoint, before provisioning it.
+6. Generate/reuse CARETAKER_WORKER_TOKEN privately, configure the same token
+   for endpoint authentication, worker environment, and local game server.
+   Prefer SecretStash selectors to literal CLI tokens. Keep raw CLI output
+   private because errors can echo tokens. Record resource IDs, not secrets.
+   Use CARETAKER_WORKER_URL for its managed HTTPS .nebius.cloud URL. Wait
+   for authenticated /healthz JSON with ready:true; RUNNING is insufficient.
+   Do not silently change pinned dependencies, model revision, or game code.
+7. Start the web app on 127.0.0.1:8765 with those environment settings.
+   Verify /healthz and the welcome page. Record PID and private log path.
+   Run all tagged Python tests in a temporary GAME_DATA_DIR. These tests
+   mock cloud/model work and cannot prove live GPU or provider readiness.
+8. Leave submitting player training jobs, commissioning the shared cooling
+   controller, and solving rooms to gameplay. Do not load an old adapter,
+   pre-solve rooms, or create a cloud web host, registry, or public tunnel.
+9. Return the local URL, credential names/readiness (no values), selected
+   project/subnet, worker/filesystem IDs and readiness, vision/dialogue
+   models, validation evidence, unresolved prerequisites, and cleanup steps.
+   Explain private UUID resume links and independent saves. Finish/reset
+   releases a cooling lease and stops the controller only when no active
+   users remain; GPU jobs continue independently and the warm GPU must be
+   stopped separately. Preserve both local saves and worker storage.
