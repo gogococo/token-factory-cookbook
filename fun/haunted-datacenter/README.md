@@ -4,7 +4,7 @@ Run a three-room escape game that combines web research, vision inference, LoRA 
 
 This recipe uses [Haunted Datacenter by gogococo](https://github.com/gogococo/haunted-datacenter), release [`stream-host-v2`](https://github.com/gogococo/haunted-datacenter/releases/tag/stream-host-v2), commit `fb7c5d2f5c405f876e31be093e4204f0b553ef52`. The game code stays in its upstream repository. The recommended setup runs the web app locally and trains/serves the caretaker on one warm Nebius Serverless AI GPU.
 
-## What You Will Build
+## What you will build
 
 The local game server coordinates these services:
 
@@ -18,7 +18,7 @@ The GPU keeps the pinned `Qwen/Qwen3-0.6B` base model warm. Separate training an
 
 Each game has an independent UUID save and private resume link. Friends can help solve one game together; shared co-op clicking and synchronization are not implemented. The local web app needs no PyTorch installation, local model download, or loopback model runner for the recommended path.
 
-## Credentials and Access
+## Credentials and access
 
 Prepare the following before starting. Local web hosting still calls paid cloud services and requires a warm GPU.
 
@@ -41,7 +41,7 @@ Follow the official [Token Factory authentication guide](https://docs.tokenfacto
 
 Keep secrets in the server environment or a private `.env` file. Never put them in browser fields, chat prompts, screenshots, or Git. The game generates the cooling controller's bearer token itself. UUID resume links are also bearer secrets: anyone with the link can resume that game.
 
-## Set Up Locally
+## Set up locally
 
 Use Git, Python 3.12 with TLS support, the Nebius AI Cloud CLI, and a GPU-capable project with a persistent filesystem. No domain, registry, public game host, or Cloudflare Worker is required for local web hosting.
 
@@ -114,7 +114,7 @@ Open **http://127.0.0.1:8765**, choose **New game**, enter a display name, then 
 
 Use one local game-server process per project for this shared controller setup. Keep its private runtime directory across restarts; the GPU filesystem separately preserves model/job data. Starting over creates a new UUID and keeps the old save and scores.
 
-## One-Shot Setup Prompt
+## One-shot setup prompt
 
 Paste this into a coding agent with terminal access, or use the standalone [setup prompt](setup-prompt.txt). It prepares local hosting and the required warm GPU. Account login, missing credentials, resource selections, and billing approval can still need your input.
 
@@ -175,7 +175,7 @@ Use the recommended warm Serverless GPU path, not the legacy local CPU runner.
    stopped separately. Preserve both local saves and worker storage.
 ```
 
-## Verify and Play
+## Verify and play
 
 Check the local web app from another terminal:
 
@@ -204,7 +204,7 @@ GAME_DATA_DIR=$(mktemp -d) .venv/bin/python -m unittest discover -q
 
 These tests mock external services/model execution. A full integration check requires live Tavily Search and Extract, Token Factory vision/dialogue, this player's GPU training and checkpoint selection, and the deployed cooling controller. Do not describe mocked tests as a verified cloud playthrough. Training and inference have separate bounded queues; a queued operation continues automatically. Preflight with the expected number of players before raising pool sizes.
 
-## Costs and Cleanup
+## Costs and cleanup
 
 Tavily Search/Extract, Token Factory inference, the warm GPU, persistent storage, and the CPU controller have separate usage charges. The warm GPU stays allocated between jobs. Check account pricing and budget before provisioning it. Cold startup includes image/model downloads and loading multiple model processes; the 45-minute game format is presentation pacing, not a completion-time guarantee.
 
@@ -214,7 +214,7 @@ GPU training jobs continue independently of game resets and completion. Stop the
 
 Stop the local web app with Ctrl-C. Preserve `.runtime/` for private UUID saves, scores, and controller receipts, and preserve the GPU filesystem for datasets, model cache, adapters, and job receipts. Review retained storage charges before deciding whether to delete it. Never delete a shared filesystem or stop a shared endpoint while other players need it.
 
-## Optional Legacy Path
+## Optional legacy path
 
 The tag retains managed Token Factory fine-tuning with a loopback CPU runner for earlier saves. This path needs Token Factory file upload/fine-tuning/checkpoint access, local PyTorch and model dependencies, and matching runtime directories. It can require importing the final adapter from the same job after a download `AccessDenied`. Follow the pinned [training guide's legacy section](https://github.com/gogococo/haunted-datacenter/blob/fb7c5d2f5c405f876e31be093e4204f0b553ef52/deploy/TRAINING.md#optional-earlier-path); do not mix its credentials, checkpoint workflow, or latency expectations with the warm-worker setup above.
 
